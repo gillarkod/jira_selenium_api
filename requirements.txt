@@ -1,0 +1,9 @@
+xvfbwrapper
+selenium
+pyyamlconfig
+flask
+pylint
+jira
+nose
+coverage
+mock

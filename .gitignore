@@ -1,0 +1,6 @@
+.idea
+*.swp
+*.pyc
+config.yaml
+.coverage
+cover
