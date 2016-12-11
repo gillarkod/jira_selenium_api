@@ -11,6 +11,7 @@ from jira_selenium import (
     MoveIssue,
     MoveIssueError,
 )
+from pyyamlconfig import load_config
 
 APP = Flask(__name__)
 
@@ -30,4 +31,7 @@ def move_issue(issue, project):
         return str(err), 400
 
 if __name__ == '__main__':
-    APP.run()
+    config = load_config('config.yaml')
+    APP.run(
+        port=config.get('port', 5000),
+    )
