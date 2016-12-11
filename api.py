@@ -34,4 +34,5 @@ if __name__ == '__main__':
     config = load_config('config.yaml')
     APP.run(
         port=config.get('port', 5000),
+        debug=config.get('debug', False),
     )
