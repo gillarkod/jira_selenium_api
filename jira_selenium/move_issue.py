@@ -4,6 +4,7 @@ Move an issue to a new project
 import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import (
     NoSuchElementException,
     ElementNotVisibleException,
@@ -32,7 +33,12 @@ class MoveIssue:
         self.password = password
 
         self.xvfb.start()
-        self.browser = webdriver.Chrome()
+        chrome_options = Options()
+        for argument in self.config.get('arguments', []):
+            chrome_options.add_argument(argument)
+        self.browser = webdriver.Chrome(
+            chrome_options=chrome_options,
+        )
         self.login()
         self.move(self.get_issue_id())
         self.verify()
