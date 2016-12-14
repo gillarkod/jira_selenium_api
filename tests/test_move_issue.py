@@ -68,7 +68,7 @@ class TestMoveIssue(unittest.TestCase):
         Test that an issue can be moved
         """
         key_before = self.issue.key
-        MoveIssue(self.issue.key, self.to_project, self.username, self.password)
+        MoveIssue(self.issue.key, self.to_project, self.username, self.password, self.url)
         issues = self.jira.search_issues('key={}'.format(key_before))
         self.assertIn(
             self.to_project,
@@ -84,7 +84,7 @@ class TestMoveIssue(unittest.TestCase):
                 'url': self.url,
             }
             with self.assertRaises(MoveIssueError) as err:
-                MoveIssue(self.issue.key, self.to_project, self.username, 'wrongpassword')
+                MoveIssue(self.issue.key, self.to_project, self.username, 'wrongpassword', self.url)
 
             self.assertEqual(
                 str(err.exception),
@@ -95,24 +95,20 @@ class TestMoveIssue(unittest.TestCase):
         """
         Test that an exception is raised if the login page is faulty
         """
-        with mock.patch('jira_selenium.move_issue.load_config') as mock_config:
-            mock_config.return_value = {
-                'url': '{}/error'.format(self.url),
-            }
-            with self.assertRaises(MoveIssueError) as err:
-                MoveIssue(self.issue.key, self.to_project, self.username, self.password)
+        with self.assertRaises(MoveIssueError) as err:
+            MoveIssue(self.issue.key, self.to_project, self.username, self.password, '{}/error'.format(self.url))
 
-            self.assertEqual(
-                str(err.exception),
-                'Could not login',
-            )
+        self.assertEqual(
+            str(err.exception),
+            'Could not login',
+        )
 
     def test_faulty_issue(self):
         """
         Test that an exception is raised if the issue can't be found
         """
         with self.assertRaises(MoveIssueError) as err:
-            MoveIssue('NOEXIST-1', self.to_project, self.username, self.password)
+            MoveIssue('NOEXIST-1', self.to_project, self.username, self.password, self.url)
 
         self.assertEqual(
             str(err.exception),
@@ -124,7 +120,7 @@ class TestMoveIssue(unittest.TestCase):
         Test that an exception is raised if the project can't be found
         """
         with self.assertRaises(MoveIssueError) as err:
-            MoveIssue(self.issue.key, 'NOEXIST', self.username, self.password)
+            MoveIssue(self.issue.key, 'NOEXIST', self.username, self.password, self.url)
 
         self.assertEqual(
             str(err.exception),
@@ -136,7 +132,7 @@ class TestMoveIssue(unittest.TestCase):
         Test that an exception is raised if the issue can't be moved
         """
         with self.assertRaises(MoveIssueError) as err:
-            MoveIssue(self.issue.key, self.from_project, self.username, self.password)
+            MoveIssue(self.issue.key, self.from_project, self.username, self.password, self.url)
 
         self.assertEqual(
             str(err.exception),

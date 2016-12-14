@@ -26,7 +26,10 @@ def move_issue(issue, project):
         auth = request.authorization
         if auth is None:
             return 'You need to authenticate', 401
-        MoveIssue(issue, project, auth.username, auth.password)
+        url = request.args.get('url')
+        if url is None:
+            return 'You need to supply an url', 400
+        MoveIssue(issue, project, auth.username, auth.password, url)
         return 'success'
     except MoveIssueError as err:
         return str(err), 400

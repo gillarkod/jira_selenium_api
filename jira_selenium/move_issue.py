@@ -24,13 +24,14 @@ class MoveIssue:
     """
     Move an issue to a new project
     """
-    def __init__(self, issue, project, username, password):
+    def __init__(self, issue, project, username, password, url):
         self.config = load_config('config.yaml')
         self.issue = issue
         self.project = project
         self.xvfb = Xvfb(width=1280, height=720)
         self.username = username
         self.password = password
+        self.url = url
 
         self.xvfb.start()
         chrome_options = Options()
@@ -58,7 +59,7 @@ class MoveIssue:
         """
         self.browser.get(
             '{}/login.jsp'.format(
-                self.config.get('url')
+                self.url,
             )
         )
         try:
@@ -77,7 +78,7 @@ class MoveIssue:
         Fetch issue id that is required for the move issue dialog
         """
         self.browser.get('{}/browse/{}'.format(
-            self.config.get('url'),
+            self.url,
             self.issue,
         ))
         try:
@@ -91,7 +92,7 @@ class MoveIssue:
         Go through the move issue wizard
         """
         self.browser.get('{}/secure/MoveIssue!default.jspa?id={}'.format(
-            self.config.get('url'),
+            self.url,
             issue_id,
         ))
         dropdown = self.browser.find_element_by_id('project-options')
