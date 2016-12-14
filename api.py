@@ -1,3 +1,4 @@
+#!/bin/env python3
 """
 API for interacting with Jira
 Some features of Jira don't have an endpoint and are too complex
