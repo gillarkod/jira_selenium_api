@@ -33,6 +33,7 @@ def move_issue(issue, project):
 if __name__ == '__main__':
     config = load_config('config.yaml')
     APP.run(
+        host=config.get('host', '0.0.0.0'),
         port=config.get('port', 5000),
         debug=config.get('debug', False),
     )
