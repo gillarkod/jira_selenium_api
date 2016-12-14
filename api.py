@@ -12,7 +12,10 @@ from jira_selenium import (
     MoveIssue,
     MoveIssueError,
 )
-from pyyamlconfig import load_config
+from pyyamlconfig import (
+    load_config,
+    PyYAMLConfigError,
+)
 
 APP = Flask(__name__)
 
@@ -35,7 +38,11 @@ def move_issue(issue, project):
         return str(err), 400
 
 if __name__ == '__main__':
-    config = load_config('config.yaml')
+    try:
+        config = load_config('config.yaml')
+    except PyYAMLConfigError:
+        print('Could not load config file, using defaults')
+        config = {}
     ssl = config.get('ssl')
     if ssl is None:
         context = None

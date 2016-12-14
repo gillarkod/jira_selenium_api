@@ -10,7 +10,10 @@ from selenium.common.exceptions import (
     ElementNotVisibleException,
 )
 from xvfbwrapper import Xvfb
-from pyyamlconfig import load_config
+from pyyamlconfig import (
+    load_config,
+    PyYAMLConfigError,
+)
 
 
 class MoveIssueError(Exception):
@@ -25,7 +28,10 @@ class MoveIssue:
     Move an issue to a new project
     """
     def __init__(self, issue, project, username, password, url):
-        self.config = load_config('config.yaml')
+        try:
+            self.config = load_config('config.yaml')
+        except PyYAMLConfigError:
+            self.config = {}
         self.issue = issue
         self.project = project
         self.xvfb = Xvfb(width=1280, height=720)
