@@ -37,6 +37,7 @@ class MoveIssue:
         for argument in self.config.get('arguments', []):
             chrome_options.add_argument(argument)
         self.browser = webdriver.Chrome(
+            service_log_path=self.config.get('service_log_path'),
             chrome_options=chrome_options,
         )
         self.login()
