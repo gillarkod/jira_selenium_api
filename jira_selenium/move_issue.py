@@ -47,6 +47,7 @@ class MoveIssue:
             service_log_path=self.config.get('service_log_path'),
             chrome_options=chrome_options,
         )
+        self.browser.implicitly_wait(5)
         self.login()
         self.move(self.get_issue_id())
         self.verify()
@@ -56,8 +57,8 @@ class MoveIssue:
         """
         Clean up on exit
         """
-        self.xvfb.stop()
         self.browser.quit()
+        self.xvfb.stop()
 
     def login(self):
         """
